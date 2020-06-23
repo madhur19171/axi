@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `axi_bus_compare` and `axi_slave_compare`; two synthesizable verification IPs meant to be used
   to compare two AXI buses on an FPGA.
 - Add `axi_lite_from_mem` and `axi_from_mem` acting like SRAMs making AXI4 requests downstream.
+- `axi_lite_dw_converter`: Convert the data width of AXI4-Lite transactions. Emmits the
+  appropriate amount of downstream transactions to perform the whole requested access.
+
 
 ### Changed
 - `axi_demux`: Replace FIFO between AW and W channel by a register plus a counter.  This prevents
