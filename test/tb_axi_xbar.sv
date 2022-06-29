@@ -48,8 +48,9 @@ module tb_axi_xbar #(
   /// Enable exclusive accesses
   parameter bit TbEnExcl                     = 1'b0,   
   /// Restrict to only unique IDs         
-  parameter bit TbUniqueIds                  = 1'b0       
-
+  parameter bit TbUniqueIds                  = 1'b0,      
+  /// Test the XBAR with multicast support
+  parameter bit TbMulticast                  = 1'b0
 );
 
   // TB timing parameters
@@ -279,20 +280,35 @@ module tb_axi_xbar #(
   //-----------------------------------
   // DUT
   //-----------------------------------
-  axi_xbar_intf #(
-    .AXI_USER_WIDTH ( TbAxiUserWidth  ),
-    .Cfg            ( xbar_cfg        ),
-    .rule_t         ( rule_t          )
-  ) i_xbar_dut (
-    .clk_i                  ( clk     ),
-    .rst_ni                 ( rst_n   ),
-    .test_i                 ( 1'b0    ),
-    .slv_ports              ( master  ),
-    .mst_ports              ( slave   ),
-    .addr_map_i             ( AddrMap ),
-    .en_default_mst_port_i  ( '0      ),
-    .default_mst_port_i     ( '0      )
-  );
+  if (TbMulticast) begin : g_multicast_xbar
+    axi_mcast_xbar_intf #(
+      .AXI_USER_WIDTH ( TbAxiUserWidth ),
+      .Cfg            ( xbar_cfg       ),
+      .rule_t         ( rule_t         )
+    ) i_xbar_dut (
+      .clk_i                  ( clk     ),
+      .rst_ni                 ( rst_n   ),
+      .test_i                 ( 1'b0    ),
+      .slv_ports              ( master  ),
+      .mst_ports              ( slave   ),
+      .addr_map_i             ( AddrMap )
+    );
+  end else begin : g_standard_xbar
+    axi_xbar_intf #(
+      .AXI_USER_WIDTH ( TbAxiUserWidth  ),
+      .Cfg            ( xbar_cfg        ),
+      .rule_t         ( rule_t          )
+    ) i_xbar_dut (
+      .clk_i                  ( clk     ),
+      .rst_ni                 ( rst_n   ),
+      .test_i                 ( 1'b0    ),
+      .slv_ports              ( master  ),
+      .mst_ports              ( slave   ),
+      .addr_map_i             ( AddrMap ),
+      .en_default_mst_port_i  ( '0      ),
+      .default_mst_port_i     ( '0      )
+    );
+  end
 
   // logger for master modules
   for (genvar i = 0; i < TbNumMasters; i++) begin : gen_master_logger

@@ -17,7 +17,7 @@ package:
     - "Florian Zaruba <zarubaf@iis.ee.ethz.ch>"
 
 dependencies:
-  common_cells: { git: "https://github.com/pulp-platform/common_cells.git", version: 1.26.0 }
+  common_cells:        { git: "https://github.com/pulp-platform/common_cells.git", rev: "c858c369e288400cae847064bb653a951a9f390f" }
   common_verification: { git: "https://github.com/pulp-platform/common_verification.git", version: 0.2.3 }
   tech_cells_generic:  { git: "https://github.com/pulp-platform/tech_cells_generic.git", version: 0.2.2 }
 
@@ -41,6 +41,7 @@ sources:
   - src/axi_cut.sv
   - src/axi_delayer.sv
   - src/axi_demux.sv
+  - src/axi_mcast_demux.sv
   - src/axi_dw_downsizer.sv
   - src/axi_dw_upsizer.sv
   - src/axi_fifo.sv
@@ -79,6 +80,7 @@ sources:
   - src/axi_iw_converter.sv
   - src/axi_lite_xbar.sv
   - src/axi_xbar.sv
+  - src/axi_mcast_xbar.sv
   # Level 5
   - src/axi_xp.sv
 
