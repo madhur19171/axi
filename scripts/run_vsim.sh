@@ -166,23 +166,6 @@ exec_test() {
                 done
             done
             ;;
-        axi_xbar)
-            for Multicast in 0 1; do
-                for NumMst in 1 6; do
-                    for NumSlv in 1 8; do
-                        for Atop in 0 1; do
-                            for Exclusive in 0 1; do
-                                for UniqueIds in 0 1; do
-                                    call_vsim tb_axi_xbar -gTbMulticast=$Multicast -gTbNumMasters=$NumMst -gTbNumSlaves=$NumSlv \
-                                            -gTbEnAtop=$Atop -gTbEnExcl=$Exclusive \
-                                            -gTbUniqueIds=$UniqueIds
-                                done
-                            done
-                        done
-                    done
-                done
-            done
-            ;;
         axi_to_mem_banked)
             for MEM_LAT in 1 2; do
                 for BANK_FACTOR in 1 2; do
@@ -206,6 +189,30 @@ exec_test() {
             ;;
         axi_xbar)
             for GEN_ATOP in 0 1; do
+                for NUM_MST in 1 6; do
+                    for NUM_SLV in 2 9; do
+                        for MST_ID_USE in 3 5; do
+                            MST_ID=5
+                            for DATA_WIDTH in 64 256; do
+                                for PIPE in 0 1; do
+                                    call_vsim tb_axi_xbar -t 1ns -voptargs="+acc" \
+                                        -gTbNumMasters=$NUM_MST       \
+                                        -gTbNumSlaves=$NUM_SLV        \
+                                        -gTbAxiIdWidthMasters=$MST_ID \
+                                        -gTbAxiIdUsed=$MST_ID_USE     \
+                                        -gTbAxiDataWidth=$DATA_WIDTH  \
+                                        -gTbPipeline=$PIPE            \
+                                        -gTbEnAtop=$GEN_ATOP
+                                done
+                            done
+                        done
+                    done
+                done
+            done
+            ;;
+        axi_mcast_xbar)
+            for GEN_ATOP in 0; do
+            # for GEN_ATOP in 0 1; do
                 for NUM_MST in 1 6; do
                     for NUM_SLV in 2 9; do
                         for MST_ID_USE in 3 5; do
