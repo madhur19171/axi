@@ -59,7 +59,7 @@ module tb_axi_lite_dw_converter #(
   `AXI_LITE_TYPEDEF_RESP_T(res_lite_mst_t, b_chan_lite_t, r_chan_lite_mst_t)
 
 
-  typedef axi_test::rand_axi_lite_master #(
+  typedef axi_test::axi_lite_rand_master #(
     // AXI interface parameters
     .AW ( TbAxiAddrWidth    ),
     .DW ( TbAxiDataWidthSlv ),
@@ -71,7 +71,7 @@ module tb_axi_lite_dw_converter #(
     .MAX_READ_TXNS  ( 100   ),
     .MAX_WRITE_TXNS ( 100   )
   ) rand_lite_master_t;
-  typedef axi_test::rand_axi_lite_slave #(
+  typedef axi_test::axi_lite_rand_slave #(
     // AXI interface parameters
     .AW ( TbAxiAddrWidth    ),
     .DW ( TbAxiDataWidthMst ),
