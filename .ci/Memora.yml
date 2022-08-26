@@ -201,6 +201,19 @@ artifacts:
     outputs:
       - build/axi_lite_mailbox-%.tested
 
+  axi_lite_dw_converter-%:
+    inputs:
+      - Bender.yml
+      - include
+      - scripts/run_vsim.sh
+      - src/axi_pkg.sv
+      - src/axi_intf.sv
+      - src/axi_test.sv
+      - src/axi_lite_dw_converter.sv
+      - test/tb_axi_lite_dw_converter.sv
+    outputs:
+      - build/axi_lite_dw_converter-%.tested
+
   axi_lite_xbar-%:
     inputs:
       - Bender.yml
