@@ -691,21 +691,15 @@ module synth_axi_iw_converter # (
   );
 endmodule
 
-<<<<<<< HEAD
+
 module synth_axi_to_mem_banked #(
   parameter int unsigned AxiDataWidth  = 32'd0,
   parameter int unsigned BankNum       = 32'd0,
   parameter int unsigned BankAddrWidth = 32'd0
-=======
-module synth_axi_lite_dw_converter #(
-  parameter int unsigned AXI_SLV_PORT_DATA_WIDTH = 32'd0,
-  parameter int unsigned AXI_MST_PORT_DATA_WIDTH = 32'd0
->>>>>>> 01cbd95... axi_lite_sw_converter: Add to synth bench
 ) (
   input logic clk_i,
   input logic rst_ni
 );
-<<<<<<< HEAD
   localparam int unsigned AxiIdWidth    = 32'd10;
   localparam int unsigned AxiAddrWidth  = 32'd64;
   localparam int unsigned AxiStrbWidth  = AxiDataWidth / 32'd8;
@@ -764,7 +758,17 @@ module synth_axi_lite_dw_converter #(
     .axi_to_mem_busy_o ( axi_to_mem_busy )
   );
 
-=======
+endmodule
+
+
+module synth_axi_lite_dw_converter #(
+  parameter int unsigned AXI_SLV_PORT_DATA_WIDTH = 32'd0,
+  parameter int unsigned AXI_MST_PORT_DATA_WIDTH = 32'd0
+) (
+  input logic clk_i,
+  input logic rst_ni
+);
+
   localparam int unsigned AXI_ADDR_WIDTH = 32'd64;
 
   AXI_LITE #(
@@ -788,6 +792,4 @@ module synth_axi_lite_dw_converter #(
     .mst    ( mst_intf )
   );
 
-
->>>>>>> 01cbd95... axi_lite_sw_converter: Add to synth bench
 endmodule
