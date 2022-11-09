@@ -749,24 +749,25 @@ module synth_axi_to_mem_banked #(
 endmodule
 
 module synth_axi_xbar #(
-  parameter int unsigned NoSlvMst          = 32'd8, // Max 16, as the addr rules defined below 
-  parameter bit EnableMulticast            = 0,
-  parameter bit UniqueIds                  = 0,
+  parameter int unsigned NoSlvMst               = 32'd8, // Max 16, as the addr rules defined below 
+  parameter bit EnableMulticast                 = 0,
+  parameter bit UniqueIds                       = 0,
+  parameter axi_pkg::xbar_latency_e LatencyMode = axi_pkg::NO_LATENCY, 
   // axi configuration
-  parameter int unsigned AxiIdWidthMasters =  4,
-  parameter int unsigned AxiIdUsed         =  3, // Has to be <= AxiIdWidthMasters
-  parameter int unsigned AxiIdWidthSlaves  =  AxiIdWidthMasters + $clog2(NoSlvMst),
-  parameter int unsigned AxiAddrWidth      =  32,    // Axi Address Width
-  parameter int unsigned AxiDataWidth      =  32,    // Axi Data Width
-  parameter int unsigned AxiStrbWidth      =  AxiDataWidth / 8,
-  parameter int unsigned AxiUserWidth      =  32,
+  parameter int unsigned AxiIdWidthMasters      =  4,
+  parameter int unsigned AxiIdUsed              =  3, // Has to be <= AxiIdWidthMasters
+  parameter int unsigned AxiIdWidthSlaves       =  AxiIdWidthMasters + $clog2(NoSlvMst),
+  parameter int unsigned AxiAddrWidth           =  32,    // Axi Address Width
+  parameter int unsigned AxiDataWidth           =  32,    // Axi Data Width
+  parameter int unsigned AxiStrbWidth           =  AxiDataWidth / 8,
+  parameter int unsigned AxiUserWidth           =  32,
   // axi types
-  parameter type id_mst_t                  = logic [AxiIdWidthSlaves-1:0],
-  parameter type id_slv_t                  = logic [AxiIdWidthMasters-1:0],
-  parameter type addr_t                    = logic [AxiAddrWidth-1:0],
-  parameter type data_t                    = logic [AxiDataWidth-1:0],
-  parameter type strb_t                    = logic [AxiStrbWidth-1:0],
-  parameter type user_t                    = logic [AxiUserWidth-1:0]
+  parameter type id_mst_t                       = logic [AxiIdWidthSlaves-1:0],
+  parameter type id_slv_t                       = logic [AxiIdWidthMasters-1:0],
+  parameter type addr_t                         = logic [AxiAddrWidth-1:0],
+  parameter type data_t                         = logic [AxiDataWidth-1:0],
+  parameter type strb_t                         = logic [AxiStrbWidth-1:0],
+  parameter type user_t                         = logic [AxiUserWidth-1:0]
 ) (
   input  logic                     clk_i,
   input  logic                     rst_ni,
@@ -909,7 +910,7 @@ module synth_axi_xbar #(
     MaxMstTrans:        10,
     MaxSlvTrans:        6,
     FallThrough:        1'b0,
-    LatencyMode:        axi_pkg::CUT_ALL_PORTS,
+    LatencyMode:        LatencyMode,
     PipelineStages:     0,
     AxiIdWidthSlvPorts: AxiIdWidthMasters,
     AxiIdUsedSlvPorts:  AxiIdUsed,
