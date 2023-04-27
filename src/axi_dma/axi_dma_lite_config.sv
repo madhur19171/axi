@@ -113,6 +113,8 @@ module axi_dma_lite_config #
 			Register 4: Write Length    
 			Register 5: Write Status  
 
+			Register 6: Debug Register	Used to display data when UART doesn't work in simulation
+
 			Read is same as DMA to Device	(Reads from Memory and sends to Stream)
 			Write is same as Device to DMA  (Reads from Stream and Writes to Memory)
 	*/
@@ -130,6 +132,8 @@ module axi_dma_lite_config #
 	localparam WRITE_ADDRESS_OFFSET =       3 * WORD_LENGTH;
 	localparam WRITE_LENGTH_OFFSET  =       4 * WORD_LENGTH;
 	localparam WRITE_STATUS_OFFSET  =       5 * WORD_LENGTH;
+
+	localparam DEBUG_OFFSET			=		6 * WORD_LENGTH;
 	
 
 	// AXI read descriptor input
@@ -170,6 +174,8 @@ module axi_dma_lite_config #
 	logic received_read_request;
 	logic [AXI_ADDR_WIDTH - 1 : 0] read_request_address;
 
+	logic received_debug;
+
 	logic [1 : 0] 	read_status;		// Latest Status of the read descriptor of DMA
 	logic 			read_status_valid;	// Is the read status currently valid or not
 	logic			read_status_accessed;	// Asserted when the Read Status address is read
@@ -182,6 +188,34 @@ module axi_dma_lite_config #
 		config_slave.aw_ready = 1;
 		config_slave.w_ready = 1;
 		config_slave.ar_ready = 1;
+	end
+
+	// Logic to record a Configuration to DEBUG
+	always_ff @(posedge clk) begin
+		if(rst) begin
+			received_debug <= 0;
+		end 
+		else if(config_slave.w_valid & config_slave.w_ready & received_debug) begin
+			received_debug <= 0;
+		end
+		else if(
+					config_slave.aw_valid & 
+					config_slave.aw_ready & 
+					(
+					 config_slave.aw_addr == (AXI_CONFIG_BASE_ADDR + DEBUG_OFFSET)
+					) & 
+					~received_debug) begin
+			received_debug <= 1;
+		end
+	end
+
+	// Writing to Read Config channel
+	always_ff @(posedge clk) begin
+		if(rst) begin
+		end 
+		else if(config_slave.w_valid & config_slave.w_ready & received_debug) begin
+			$display("Written to Debug Register: 0x%0x", config_slave.w_data);
+		end
 	end
 
 	// Logic to record a Configuration to do a DMA to Device transfer(Read)
